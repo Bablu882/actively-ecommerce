@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "Actively Black",
+      "cwd": "/home/forge/actively-black-python.demoserver.in",
+      "args": "runserver",
+      "script": "manage.py",
+      "exec_mode": "fork",
+      "exec_interpreter": "python3"
+    }
+  ]
+}

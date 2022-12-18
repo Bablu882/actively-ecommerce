@@ -1,0 +1,329 @@
+
+{% extends 'management/base.html' %}
+{% load static %}
+{% block title %}Actively|add-user{% endblock %}
+{% block content %}
+    <div class="dashboard dark-theme">
+        <aside class="drawer">
+            <div class="drawer-header header-common py-3 px-3 text-center">
+                <a href="#">
+                    {% for name in site %}
+                    <img src="{{name.site_logo.url}}" alt="Actively Black" />
+                    {% endfor %}                </a>
+            </div>
+            <div class="drawer-main">
+                <div class="drawer-content py-3">
+                    <div class="d-block  px-3">
+                        <small>PAGES</small>
+                    </div>
+                    <div class="navbar navbar-dark px-0">
+                        <ul class="navbar-nav w-100">
+                            {% if user.is_authenticated %}
+                            <li class="nav-item active">
+                                <a href="{% url 'logout' %}" class="nav-link"><i class="fa fa-lock mr-2" aria-hidden="true"></i>
+                                    Logout</a>
+                            </li>
+                                 {% else %}
+                            <li class="nav-item active">
+                                <a href="{% url 'login' %}" class="nav-link"><i class="fa fa-lock mr-2" aria-hidden="true"></i>
+                                    Login</a>
+
+                            </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link"><i class="fa fa-dashboard mr-2" aria-hidden="true"></i>
+                                    Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'profile' %}" class="nav-link"><i class="fa fa-user mr-2" aria-hidden="true"></i> User
+                                    Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <hr style="height:2px;border-width:0;color:rgb(250, 248, 248);background-color:rgb(255, 250, 250)">
+
+                                <a href="{% url 'listing' %}" class="nav-link"><i class="fa fa-list mr-2"
+                                        aria-hidden="true"></i>
+                                    Listing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'add-user' %}" class="nav-link"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Add/Edit
+                                    Form</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'admin-add-user' %}" class="nav-link"><i class="fa fa-user-plus mr-2" aria-hidden="true"></i>Add-User
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'admin:index' %}  " class="nav-link"><i class="fa fa-lock mr-2" aria-hidden="true"></i>Admin
+                                    </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="drawer-footer mt-auto px-3">
+                    <p class="mb-0"><a href="#" class="">Actively Black</a></p>
+                    {% for name in site %}
+                    <p class="mb-0" class="">{{name.site_contect_no1}}</p>
+                    <p class="mb-0" class="">{{name.site_contect_no2}}</p>
+
+                    {% endfor %}                
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <header class="main-header header-common py-3 px-3" style="background-color:#233044;">
+                <nav class="navbar navbar-expand-lg py-0">
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <button class="mr-3 toggle-button bg-transparent border-0 outline-0 text-white border-0" type="button"> <i class="fa fa-bars" aria-hidden="true"></i></button>
+                        <p style="color: white;" class="m-0">Welcome : {{request.user.first_name}}</p>
+                        <!-- <form class="search-bar form-inline my-lg-0"> -->
+                            <!-- <button class="btn btn-outline-light rounded-0 border-0" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button> -->
+                            <!-- <input class="form-control rounded-0 bg-transparent border-0 " type="search"
+                                placeholder="Search" aria-label="Search"> -->
+                        <!-- </form> -->
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">
+                                    <i class="fa fa-ellipsis-v"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fa fa-envelope"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fa fa-envelope"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">
+                                    <i class="fa fa-power-off"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <img class="card-img-top nav-profile" src="{{request.user.profile.avatar.url}}"
+                                alt="Card image cap">
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <section class="centered-content">
+                <div class="title mb-4">
+                    <h1>Add User</h1>
+                </div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb pl-0 bg-transparent">
+                        <li class="breadcrumb-item"><a href="#" class="text-primary">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Add User</li>
+                    </ol>
+                </nav>
+                <div class="card border-0">
+                    <div class="p-3">
+                        <form class="mt-3" action="" method="post">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-4">
+                                        <label for="user_level" class="control-label">User level<span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select form-control" name="select_user" id="select-user">
+                                            <option value="admin">Admin</option>
+                                            <option value="propertyUser">Property User</option>
+                                            <option value="cUser">Corporate User</option>
+                                        </select>
+                                        <p class="helperText text-danger">Please select user level</p>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="select_corporate" class="control-label">Select corporate<span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select form-control" name="select_corporate"
+                                            id="select-corporate">
+                                            <option value="admin">Admin</option>
+                                            <option value="propertyUser">Property User</option>
+                                            <option value="cUser">Corporate User</option>
+                                        </select>
+                                        <p class="helperText text-danger">Please select corporate</p>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="user_level">Choose property (Select from the list below)<span
+                                                class="text-danger">*</span></label>
+                                        <div class="radio-group form-check">
+                                            <div class="d-block mb-1">
+                                                <input class="form-check-input" type="radio" name="nefka_business"
+                                                    id="nefka_business" value="option1" checked>
+                                                <label class="form-check-label" for="nefka_business">
+                                                    Nefka business
+                                                </label>
+                                            </div>
+                                            <div class="d-block mb-1">
+                                                <input class="form-check-input" type="radio" name="resort_spa"
+                                                    id="resort_spa" value="option2">
+                                                <label class="form-check-label" for="resort_spa">
+                                                    Paradise Point Resort and Spa
+                                                </label>
+                                            </div>
+                                            <div class="d-block">
+                                                <input class="form-check-input" type="radio" name="whirks" id="whirks"
+                                                    value="option3">
+                                                <label class="form-check-label" for="whirks">
+                                                    Whirx
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="email" class="control-label">Email<span
+                                                class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" name="email" id="email"
+                                            placeholder="me@you.com" required />
+                                        <p class="helperText text-danger">Please enter email address</p>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="password" class="control-label">Password<span
+                                                class="text-danger">*</span></label>
+                                        <input type="password" class="form-control" name="password" id="password"
+                                            placeholder="Must be over 30% complexity" required />
+                                        <p class="helperText text-danger">Please enter password</p>
+                                        <p class="helperText mb-2 ">Password complexity: 0%</p>
+                                        <ul class="required-info list-unstyled">
+                                            <li><i class="fa fa-close text-danger mr-1"></i> Length of at least 8
+                                                characters</li>
+                                            <li><i class="fa fa-close text-danger mr-1"></i> Contains uppercase and
+                                                lowercase letters</li>
+                                            <li><i class="fa fa-close text-danger mr-1"></i> Contains number</li>
+                                            <li><i class="fa fa-close text-danger mr-1"></i> Contains special characters
+                                            </li>
+                                            <li><i class="fa fa-check text-success mr-1"></i> Doesn’t contain spaces
+                                            </li>
+                                            <li><i class="fa fa-check text-success mr-1"></i> Doesn’t contain common
+                                                password words</li>
+                                            <li><i class="fa fa-check text-success mr-1"></i> Passwords match</li>
+                                        </ul>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="password" class="control-label">Confirm password<span
+                                                class="text-danger">*</span></label>
+                                        <input type="password" class="form-control" name="password" id="password"
+                                            placeholder="Enter same as above password" required />
+                                        <p class="helperText text-danger">Please enter confirm password</p>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="ifname" class="control-label">Incognito first name</label>
+                                        <input type="text" class="form-control" name="ifname" id="ifname"
+                                            placeholder="False name visible during demos" />
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="ilname" class="control-label">Incognito last name</label>
+                                        <input type="text" class="form-control" name="ilname" id="ilname"
+                                            placeholder="False name visible during demos" />
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="reporting_location_name" class="control-label">Reporting location
+                                            name</label>
+                                        <input type="text" class="form-control" name="reporting_location_name"
+                                            id="reporting_location_name" placeholder="Name of your company" />
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="reporting_location_id" class="control-label">Reporting location
+                                            ID</label>
+                                        <input type="text" class="form-control" name="reporting_location_id"
+                                            id="reporting_location_id" placeholder="ID of your company" />
+                                        <p class="required-info">
+                                            Write a challenge question below and provide an answer. This will be used to
+                                            help protect your account from unauthorized access.The challenge question
+                                            and answer you provide should only be known by this user. Note: answers are
+                                            case sensitive, and multiple word answers are encouraged.
+                                        </p>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="challenge_question" class="control-label">Challenge question</label>
+                                        <input type="text" class="form-control" name="challenge_question"
+                                            id="challenge_question"
+                                            placeholder="Provide a question and answer only this user would know" />
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="answer" class="control-label">Answer</label>
+                                        <input type="text" class="form-control" name="answer" id="answer"
+                                            placeholder="cAsE sEnSiTiVe" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-4">
+                                        <label for="fname" class="control-label">First name<span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="fname" id="fname"
+                                            placeholder="Mike" required />
+                                        <p class="helperText text-danger">Please enter first name</p>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="lname" class="control-label">Last name<span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="lname" id="fname"
+                                            placeholder="Smith" required />
+                                        <p class="helperText text-danger">Please enter last name</p>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="lname" class="control-label">User initials or Call sign</label>
+                                        <input type="text" class="form-control" name="lname" id="fname"
+                                            placeholder="MS, 14, etc" />
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="map-pin" class="control-label">Map pin color</label>
+                                        <input type="text" class="form-control" name="map_pin" id="map-pin"
+                                            placeholder="Click to select color for BackTrack map" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            <footer class="footer py-3 px-3">
+                {% for name in site %}
+                <p class="mb-0"><a href="{{name.site_url}}">activelyblack.com</a></p>
+                {% endfor %}            
+            </footer>
+            <button class="color-picker-btn btn btn-primary">
+                <i class="fa fa-paint-brush" aria-hidden="true"></i>
+            </button>
+            <div class="overlay"></div>
+            <aside class="color-picker">
+                <h6 class="mb-4">Select a Demo</h6>
+                <div class="select-demo p-3 mb-4">
+                    <p class="mb-0">Hello! Select your style below. Choose the ones that best fits your needs.</p>
+                </div>
+                <div class="row">
+                    <div class="col-6 text-center">
+                        <button class="box rounded dark-picker w-100">
+                            <span class="color-box bg-dark"></span>
+                        </button>
+                        <span class="d-block mt-1">Dark</span>
+                    </div>
+                    <div class="col-6 text-center">
+                        <button class="box rounded light-picker w-100">
+                            <span class="color-box bg-light"></span>
+                        </button>
+                        <span class="d-block mt-1">Light</span>
+                    </div>
+                    
+                </div>
+            </aside>
+        </div>
+    </div>
+
+{% endblock %}

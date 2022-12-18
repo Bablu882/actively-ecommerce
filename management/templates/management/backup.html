@@ -1,0 +1,124 @@
+{% extends 'management/base.html' %}
+{% block title %}{% endblock %}
+{% block content %}
+{% load crispy_forms_tags %}
+<style>
+    
+</style>
+<style>
+    .errorlist{
+        
+        list-style-type: none;
+    } 
+    .errorlist li{
+        color:red !important;
+        /* padding-left: 100px !important; */
+    }
+    .login.card .errorlist li{
+       padding-left: 6.5px;
+    }
+    #div_id_password2 .control-label.requiredField{
+        display: none;
+    }
+    #div_id_password1 .control-label.requiredField{
+        display: none;
+    }
+    #div_id_email .control-label.requiredField{
+        display: none;
+    }
+    #div_id_username .control-label.requiredField{
+        display: none;
+    }
+     
+</style>
+
+
+    <div class="dashboard dark-theme">
+        <div class="main-content mw-100">
+            <section class="centered-content h-100">
+                <div class="row m-0 align-items-center h-100 justify-content-center">
+                    <div class="col-lg-6 login card border-0 py-5 px-4">
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class='alert alert-danger'>
+                            {{message}}
+                    
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        
+                        <h2 class="text-center mb-4">Sign up</h2>
+                        
+    
+                    <form class="mx-1 mx-md-4" method="POST" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                        <div class="d-flex flex-row align-items-center">
+                        <i class="fa fa-user fa-lg mr-3 fa-fw"></i>
+                        <div class="form-outline flex-fill form-group mb-0">
+                            <!-- <input type="text" name="username" class="form-control" placeholder="Your Name" /> -->
+                            {{form.username|as_crispy_field}}
+                        </div> 
+                        
+                        
+                        
+                    </div>  
+                    <!-- {{form.username.errors}} -->
+                    </div>
+                                                                
+                           <div class="mb-3">
+                        <div class="d-flex flex-row align-items-center">
+                        <i class="fa fa-envelope fa-lg mr-3 fa-fw"></i>
+                        <div class="form-outline flex-fill form-group mb-0">
+                            <!-- <input type="email" name="email" class="form-control" placeholder="Your Email" /> -->
+                           {{form.email|as_crispy_field}}
+                           
+                            
+                        </div>
+                        </div>
+                        <!-- {{form.email.errors}} -->
+                    </div> 
+                        <div class="mb-3">
+                        <div class="d-flex flex-row align-items-center">
+                        <i class="fa fa-lock fa-lg mr-3 fa-fw"></i>
+                        <div class="form-outline flex-fill form-group mb-0">
+                            <!-- <input type="password" name="password" class="form-control" placeholder="Your Password"  /> -->
+                            
+                            {{form.password1|as_crispy_field}}
+                            
+                        </div>
+                        </div>
+                        <!-- {{form.password1.errors}} -->
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex flex-row align-items-center">
+                        <i class="fa fa-key fa-lg mr-3 fa-fw"></i>
+                        <div class="form-outline flex-fill form-group mb-0">
+                            <!-- <input type="password" name="password2" class="form-control" placeholder="Confirm Password"  /> -->
+                            {{form.password2|as_crispy_field}}
+
+                        </div>
+
+                        </div>
+                        <!-- {{form.password2.errors}} -->
+                    </div>
+                        <div class="form-check d-flex mb-5">
+                        <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                        <label class="form-check-label" for="password">
+                            I agree all statements in <a href="#!">Terms of service</a>
+                        </label>
+                        </div>
+    
+                        <div class="text-center mx-4 mb-3 mb-lg-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                        <p class="mt-4">Already have an account? <a href="{% url 'login' %}">Please Login</a></p>
+                        </div>
+    
+                    </form>
+                    </div>  
+                </div>
+            </section>
+        </div>
+    </div>
+
+{% endblock %}    

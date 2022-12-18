@@ -1,0 +1,555 @@
+{% extends 'management/base.html'%}
+{% block title %}Actively|add-product{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="dashboard dark-theme">
+    <aside class="drawer">
+        <div class="drawer-header header-common py-3 px-3 text-center">
+            <a href="#">
+                {% for name in site %}
+                <img src="{{name.site_logo.url}}" alt="Actively Black" />
+                {% endfor %}            </a>
+        </div>
+        <div class="drawer-main">
+            <div class="drawer-content py-3">
+                <div class="d-block  px-3">
+                    <small>PAGES</small>
+                </div>
+                <div class="navbar navbar-dark px-0">
+                    <ul class="navbar-nav w-100">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item active">
+                            <a href="{% url 'logout' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item active">
+                            <a href="{% url 'login' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Login</a>
+
+                        </li>
+                        {% endif %}
+
+                        <li class="nav-item">
+                            <a href="{% url 'dashboard' %}" class="nav-link"><i class="fa fa-dashboard mr-2"
+                                    aria-hidden="true"></i>
+                                Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'profile' %}" class="nav-link"><i class="fa fa-user mr-2"
+                                    aria-hidden="true"></i> User
+                                Profile</a>
+                        </li>
+                        {% if request.user.is_superuser %}
+                        <li class="nav-item">
+                            <hr style="height:2px;border-width:0;color:rgb(250, 248, 248);background-color:rgb(255, 250, 250)">
+
+                            <a href="{% url 'listing' %}" class="nav-link"><i class="fa fa-list mr-2"
+                                    aria-hidden="true"></i>
+                                Listing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'add-user' %}" class="nav-link"><i class="fa fa-edit mr-2"
+                                    aria-hidden="true"></i>Add/Edit
+                                Form</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-user' %}" class="nav-link"><i class="fa fa-user-plus mr-2"
+                                    aria-hidden="true"></i>Add-User
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin:index' %}  " class="nav-link"><i class="fa fa-lock mr-2" aria-hidden="true"></i>Admin
+                                </a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+            <div class="drawer-footer mt-auto px-3">
+                <p class="mb-0"><a href="#" class="">Actively Black</a></p>
+                {% for name in site %}
+                <p class="mb-0" class="">{{name.site_contect_no1}}</p>
+                <p class="mb-0" class="">{{name.site_contect_no2}}</p>
+
+                {% endfor %}            </div>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="main-header header-common py-3 px-3" style="background-color:#233044;">
+            <nav class="navbar navbar-expand-lg py-0">
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <button class="mr-3 toggle-button bg-transparent border-0 outline-0 text-white border-0" type="button"> <i class="fa fa-bars" aria-hidden="true"></i></button>
+                    <p style="color: white;" class="m-0">Welcome : {{request.user.first_name}}</p>
+                    <!-- <form class="search-bar form-inline my-lg-0"> -->
+                        <!-- <button class="btn btn-outline-light rounded-0 border-0" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button> -->
+                        <!-- <input class="form-control rounded-0 bg-transparent border-0 " type="search"
+                            placeholder="Search" aria-label="Search"> -->
+                    <!-- </form> -->
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <img class="card-img-top nav-profile" src="{{request.user.profile.avatar.url}}"
+                            alt="Card image cap">
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        {% if messages %}
+        {% for message in messages %}
+        <div class='alert alert-success'>
+            {{message}}
+    
+        </div>
+        {% endfor %}
+        {% endif %}
+        <section class="centered-content">
+            <div class="title mb-4">
+                <h1>Profile</h1>
+            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb pl-0 bg-transparent">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                </ol>
+            </nav>
+
+            <!-- <div class="row">
+                <div class="col-lg-5 col-xl-4">
+
+                    
+                    
+                </div>
+                
+            </div> -->
+            <section class="content-main">
+                <form method="post" enctype="multipart/form-data" onsubmit="return Validate(this);">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="content-header media">
+                                <h2 class="content-title">Add New Product</h2>
+                                <div class="ml-auto">
+                  
+                                    
+                                    {% comment %} <button type="submit" class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> {% endcomment %}
+                                    <button type="submit" class="btn btn-primary ">Publish</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h4>Basic</h4>
+                                </div>
+                                <div class="card-body">
+                                    
+                                        <div class="mb-4">
+                                            <label for="product_name" class="form-label">Product title</label>
+                                            <input type="text" name="product_name" maxlength="99"  placeholder="Type here" class="form-control" id="product_name" required/>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="form-label">Description</label>
+                                            <textarea name="introduction" placeholder="Type here" class="ckeditor form-control" rows="4" required></textarea>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check mb-4">
+                                                <input id="discounted" name="checkbox" class="form-check-input" type="checkbox" value="1" />
+                                                <span class="form-check-label">Product Has Discounts</span>
+                                            </label>
+                                            <div class="col-lg-4">
+                                                <div class="mb-4">
+                                                    <label class="form-label">Price</label>
+                                                    <div class="row gx-2">
+                                                        <input placeholder="$" name="price" type="number"  min="0"  class="form-control" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="discount_box" class="col-lg-4 not-visible">
+                                                <div class="mb-4">
+                                                    <label class="form-label"> Price before  discount</label>
+                                                    <input placeholder="$" name="discount" type="number"  min="0"  class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <label class="form-label">Currency</label>
+                                                <select class="form-select">
+                                                    <option>USD</option>
+                                                  
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                      
+
+                                        {% comment %} <div class="mb-4">
+                                            <label class="form-label">Full description</label>
+                                            <textarea name="description" placeholder="Type here" class="form-control" rows="4"></textarea>
+                                        </div> {% endcomment %}
+
+                                        <div class="row">
+                                           
+                                            <div class="col-lg-4">
+                                                <div class="mb-4">
+                                                    <label class="form-label">Available</label>
+                                                    <div class="row gx-2">
+                                                        <input placeholder="quantity in stock" name="available" type="number" class="form-control" min="0" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="discount_box" class="col-lg-4">
+                                                <div class="mb-4">
+                                                    <label class="form-label"> Pieces/Set</label>
+                                                    <input placeholder="quantity for Pieces" name="pieces" type="number"  min="0"  class="form-control"required />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <label class="form-label">Promotional</label>
+                                                <select name="promotional" class="form-select">
+                                                    <option value="New">New</option>
+                                                    <option value="Hot">Hot</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label">Content</label>
+                                            <textarea name="content" placeholder="Type here" class="ckeditor form-control" rows="4" required></textarea>
+                                        </div>
+                                
+                                </div>
+                            </div>
+                            <!-- card end// -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h4>Dimensions</h4>
+                                </div>
+                                <div class="card-body">
+                                
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="mb-4">
+                                                    <label for="product_name" class="form-label">Width</label>
+                                                    <input type="text" placeholder="inch" name="width" class="form-control" id="product_name" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-4">
+                                                    <label for="product_name" class="form-label">Height</label>
+                                                    <input type="text" placeholder="inch" name="height" class="form-control" id="product_name" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                      <div class="row"> 
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label">Weight</label>
+                                                <input placeholder="gam" name="weight" type="text" class="form-control" required />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label class="form-label">Product status </label>
+                                            <select name="product_status" class="form-select">
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div> 
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label">SKU</label>
+                                                <input placeholder="Product SKU" name="SKU" type="text" class="form-control" />
+                                            </div>
+                                        </div> 
+                                       
+                                      </div>
+                                        
+
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h4>Additional Images</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="input-upload">
+                                                    <img id="url-img-1"  width="100" height="100"   style="width:100px;height:100px;" src="{% static 'management/images/theme/upload.svg'%}" alt="" />
+                                                    <input id="id_image_1"  name="name_image_1" class="form-control" type="file" accept="image/*" />
+                                                    <img id="url-img-2"  width="100" height="100"   style="width:100px;height:100px;" src="{% static 'management/images/theme/upload.svg'%}" alt="" />
+                                                    <input id="id_image_2"  name="name_image_2" class="form-control" type="file" accept="image/*" />
+                                                    <img id="url-img-3"  width="100" height="100"   style="width:100px;height:100px;" src="{% static 'management/images/theme/upload.svg'%}" alt="" />
+                                                    <input id="id_image_3"  name="name_image_3" class="form-control" type="file" accept="image/*"  />
+                                                    <img id="url-img-4"  width="100" height="100"   style="width:100px;height:100px;" src="{% static 'management/images/theme/upload.svg'%}" alt="" />
+                                                    <input id="id_image_4"  name="name_image_4" class="form-control" type="file" accept="image/*"  />
+                                                </div>
+                                            </div>
+                                        </div>
+                                
+                                </div>
+                            </div>
+                            <!-- card end// -->
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h4>Main Image</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="input-upload">
+                                        <img id="url-img"  width="100" height="100"   style="width:100px;height:100px;" src="{% static 'management/images/theme/upload.svg'%}" alt="" />
+                                        <input id="id_image"  name="main_image" class="form-control" type="file" accept="image/*" required/>
+                                    </div>
+                                </div>
+                                <div class="card-header">
+                                    <label class="form-check mb-4">
+                                        <input id="digital_file" name="checkbox" class="form-check-input" type="checkbox" value="2" />
+                                        <span class="form-check-label">Your Product Has Digital File ?</span>
+                                    </label>
+                                </div>
+                                <div class="not-visible card-body" id="digital_file_box">
+                                    <div class="input-upload">
+                                        <img   width="100" height="100"   style="width:100px;height:100px;" src="{% static 'assets-supplier/imgs/theme/upload-file.svg'%}" alt="" />
+                                        <p>allowed extension are zip , rar</p>
+                                        <input   name="digital_file" class="form-control" type="file" accept="file/*" />
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- card end// -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h4>Categories</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row gx-2">
+                                        <div class="col-sm-12 mb-3">
+                                            
+                                            <div class="mb-4">
+                                                <label class="form-label">Super Category</label>
+                                                <select id="super_category" name="super_category_value" class="form-select super_category">
+                                                    {% for super in super_category%}
+                                                    <option value="{{super.id}}"> {{super.name}} </option>
+                                                    {%endfor%}
+                                                    
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Main Category</label>
+                                                <select id="main_category" name="main_category_value"  class="form-select main_category">
+                                                    <!-- {% for main in main_category%}
+                                                    <option value="{{main.id}}"> {{main.name}} </option>
+                                                    {%endfor%} -->
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Sub Category</label>
+                                                <select id="sub_category" name="sub_category_value" class="form-select sub_category">
+                                                    <!-- {% for sub in sub_category%}
+                                                        <option value="{{sub.id}}"> {{sub.name}} </option>
+                                                    {%endfor%} -->
+                                                </select>
+                                            </div>
+
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Mini Category</label>
+                                                <select id="mini_category" name="mini_category_value" class="form-select mini_category">
+                                                    <!-- {% for mini in mini_category%}
+                                                        <option value="{{mini.id}}"> {{mini.name}} </option>
+                                                    {%endfor%} -->
+                                                </select>
+                                            </div>
+                                        
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <label for="product_name" class="form-label">Tags</label>
+                                            <input type="text" name="tags" maxlength="90" class="form-control" />
+                                        </div>
+                                    </div>
+                                
+                                    <!-- row.// -->
+                                </div>
+                            </div>
+                            <!-- card end// -->
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+        </section>
+        <footer class="footer py-3 px-3">
+            {% for name in site %}
+            <p class="mb-0"><a href="{{name.site_url}}">activelyblack.com</a></p>
+            {% endfor %}        
+        </footer>
+        <button class="color-picker-btn btn btn-primary">
+            <i class="fa fa-paint-brush" aria-hidden="true"></i>
+        </button>
+        <div class="overlay"></div>
+        <aside class="color-picker">
+            <h6 class="mb-4">Select a Demo</h6>
+            <div class="select-demo p-3 mb-4">
+                <p class="mb-0">Hello! Select your style below. Choose the ones that best fits your needs.</p>
+            </div>
+            <div class="row">
+                <div class="col-6 text-center">
+                    <button class="box rounded dark-picker w-100">
+                        <span class="color-box bg-dark"></span>
+                    </button>
+                    <span class="d-block mt-1">Dark</span>
+                </div>
+                <div class="col-6 text-center">
+                    <button class="box rounded light-picker w-100">
+                        <span class="color-box bg-light"></span>
+                    </button>
+                    <span class="d-block mt-1">Light</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<script>
+
+    var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png" , "zip" , "rar"];    
+    function Validate(oForm) {
+        var arrInputs = oForm.getElementsByTagName("input");
+        for (var i = 0; i < arrInputs.length; i++) {
+            var oInput = arrInputs[i];
+            if (oInput.type == "file") {
+                var sFileName = oInput.value;
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!blnValid) {
+                        alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                        return false;
+                    }
+                }
+            }
+        }
+    
+        return true;
+    }
+
+
+    const image = document.getElementById('id_image')
+   
+    image.addEventListener('change', () => {
+        const img_data = image.files[0]
+        
+        const url = URL.createObjectURL(img_data)
+        document.getElementById("url-img").src = url
+    })
+
+    const image_1 = document.getElementById('id_image_1')
+   
+    image_1.addEventListener('change', () => {
+        const img_data = image_1.files[0]
+        
+        const url = URL.createObjectURL(img_data)
+        document.getElementById("url-img-1").src = url
+    })
+
+    const image_2 = document.getElementById('id_image_2')
+   
+    image_2.addEventListener('change', () => {
+        const img_data = image_2.files[0]
+        
+        const url = URL.createObjectURL(img_data)
+        document.getElementById("url-img-2").src = url
+    })
+
+
+    const image_3 = document.getElementById('id_image_3')
+   
+    image_3.addEventListener('change', () => {
+        const img_data = image_3.files[0]
+        
+        const url = URL.createObjectURL(img_data)
+        document.getElementById("url-img-3").src = url
+    })    
+
+
+    const image_4 = document.getElementById('id_image_4')
+   
+    image_4.addEventListener('change', () => {
+        const img_data = image_4.files[0]
+        
+        const url = URL.createObjectURL(img_data)
+        document.getElementById("url-img-4").src = url
+    }) 
+    const discounted = document.getElementById("discounted")
+    const discountBox = document.getElementById("discount_box")
+    discounted.addEventListener('change', function() {
+        if (this.checked) {
+          
+          discountBox.classList.remove("not-visible");
+        } else {
+          
+          discountBox.classList.add("not-visible");
+        }
+      });
+      
+    const digitalFile = document.getElementById("digital_file")
+    const digitalFileBox = document.getElementById("digital_file_box")
+    digitalFile.addEventListener('change', function() {
+        if (this.checked) {
+           
+            digitalFileBox.classList.remove("not-visible");
+        } else {
+           
+            digitalFileBox.classList.add("not-visible");
+        }
+    });
+
+
+
+    
+</script>
+<script src="{% static 'management/js/get-category.js' %}"></script>
+
+{% endblock %}

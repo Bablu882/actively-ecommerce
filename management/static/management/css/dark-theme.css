@@ -1,0 +1,79 @@
+.dark-theme h1,
+.dark-theme h2,
+.dark-theme h3,
+.dark-theme h4,
+.dark-theme h5,
+.dark-theme h6,
+.dark-theme a, 
+.dark-theme p, 
+.dark-theme small,
+.dark-theme li, 
+.dark-theme span, 
+.dark-theme .fa{
+    color: #fff;
+}
+
+.dark-theme label, .dark-theme input::placeholder{
+    color: #aeaeae;
+}
+.dark-theme input[type="value"]{
+    color: #fff;
+}
+.dark-theme .bg-dark-transparent{
+    background-color: rgb(35, 48, 68);
+}
+.dark-theme .main-content {
+    background-color: rgb(27, 38, 53);
+}
+.dark-theme .table, 
+.dark-theme .drawer{
+    background-color: #233044;
+}
+.dark-theme .table th, .dark-theme .table td{
+    color: #fff;
+}
+.dark-theme .table td, 
+.dark-theme .table th{
+    border-top: 1px solid #dee2e64f;
+}
+.dark-theme .table th{
+    border-bottom: 1px solid #dee2e64f;
+}
+.dark-theme .card{
+    background-color: #233044;
+}
+.dark-theme .form-control{
+    background: transparent;
+    color: #fff;
+    border: 1px solid #dee2e64f;
+}
+.dark-theme .icon-button {
+    color: #fff;
+}
+.dark-theme .footer{
+    background: #233044;
+}
+.dark-theme option{
+    background: #233044;
+}
+.dark-theme .dropdown-menu{
+    background: #233044;
+}
+.dark-theme .action-dropdown{
+    border: 1px solid #fff;
+}
+.dark-theme .control-label{
+    background-color: #233044;
+}
+.dark-theme .color-picker{
+    background: #1b2635;
+}
+.dark-theme .color-box{
+    border: 2px solid #fff;
+}
+.dark-theme .box{
+    border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.dark-theme .select-demo{
+    background-color: #343a40;
+}

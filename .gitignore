@@ -1,0 +1,3 @@
+*.pyc
+*.pyo
+management/__pycache__/

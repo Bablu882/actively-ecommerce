@@ -1,0 +1,924 @@
+{% extends 'management/base.html'%}
+{% block title %}Actively|product-details{% endblock %}
+{% block content %}
+{% load static %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background: #ccc;
+    }
+
+    .slider {
+        width: 27 5px;
+        /*Same as width of the large image*/
+        position: relative;
+        /*Instead of height we will use padding*/
+        padding-top: 280px;
+        padding-bottom: 50px;
+        /*That helps bring the labels down*/
+
+        /* margin: 100px auto; */
+
+        /*Lets add a shadow*/
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.75);
+    }
+
+
+    /*Last thing remaining is to add transitions*/
+    .slider>img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transition: all 0.5s;
+    }
+
+    .slider input[name='slide_switch'] {
+        display: none;
+    }
+
+    .slider label {
+        /*Lets add some spacing for the thumbnails*/
+        margin: 2px 0 0 8px;
+        border: 1px solid #999;
+
+        float: left;
+        cursor: pointer;
+        transition: all 0.5s;
+
+        /*Default style = low opacity*/
+        opacity: 0.6;
+    }
+
+    .slider label img {
+        display: block;
+        width: 50px;
+        height: 50px;
+        margin: -8px;
+    }
+
+    /*Time to add the click effects*/
+    .slider input[name='slide_switch']:checked+label {
+        border-color: #666;
+        opacity: 1;
+    }
+
+    /*Clicking any thumbnail now should change its opacity(style)*/
+    /*Time to work on the main images*/
+    .slider input[name='slide_switch']~img {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+
+    /*That hides all main images at a 110% size
+On click the images will be displayed at normal size to complete the effect
+*/
+    .slider input[name='slide_switch']:checked+label+img {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    li.menu-item {
+        margin-bottom: 30px;
+    }
+    .cart-button{
+        padding: 15px;
+        
+    }
+
+    .rate>input {
+       display: none;
+    }
+
+    .rate>label {
+        color: #e5b408;
+        cursor: pointer;
+        font-size: 0;
+        line-height: 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    
+    .rate > label::before{
+        color: inherit;
+        content: "★";
+        display: inline-block;
+        font-size: 20px;
+        line-height: 1;
+        text-align: center;
+        width: 20px;
+        transition: color 0.35s ease 0s;
+    }
+    .rate>input:checked~label {
+      color: #ccc;
+    }
+    .rate>input:checked+label {
+        color: #ffc700;
+    }
+    #table-name td{
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: center;
+        /* background-color: aqua; */
+        color: white;
+        font-size: large;
+        padding-right: 6px;
+        border: 1px solid white;
+    }
+
+    .detail-qty {
+  max-width: 80px;
+  padding: 9px 20px;
+  position: relative;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.detail-qty > a {
+  font-size: 16px;
+  position: absolute;
+  right: 8px;
+  color: #3BB77E;
+}
+
+.detail-qty > a:hover {
+  color: #29A56C;
+}
+
+.detail-qty > a.qty-up {
+  top: 0;
+}
+
+.detail-qty > a.qty-down {
+  bottom: -4px;
+}
+
+.progress + .progress {
+  margin-top: 1rem;
+}
+
+.progress span {
+  line-height: 16px;
+  background: #fff;
+  padding-right: 10px;
+  width: 45px;
+}
+
+.progress-bar {
+  background-color: #3BB77E;
+}
+
+.product-rate {
+  background-image: url("../static/management/images/rating-stars.png");
+  background-position: 0 -12px;
+  background-repeat: repeat-x;
+  height: 12px;
+  width: 60px;
+  transition: all 0.5s ease-out 0s;
+  -webkit-transition: all 0.5s ease-out 0s;
+}
+
+.product-rating {
+  height: 12px;
+  background-repeat: repeat-x;
+  background-image: url("../static/management/images/rating-stars.png");
+  background-position: 0 0;
+}
+ .progress{
+    height: 10px;
+ }
+ .rating-result {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.rating-result > span {
+  display: block;
+  overflow: hidden;
+  margin-left: 5px;
+}
+.rating-result::before {
+  font-family: "uicons-regular-straight"  !important;
+  font-size: 11px;
+  letter-spacing: 2px;
+  content: '\f225' '\f225' '\f225' '\f225' '\f225';
+  color: #ff9900;
+}
+.rating-result {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+ 
+ 
+
+</style>
+
+
+
+<div class="dashboard dark-theme">
+    <aside class="drawer">
+        <div class="drawer-header header-common py-3 px-3 text-center">
+            <a href="#">
+                {% for name in site %}
+                <img src="{{name.site_logo.url}}" alt="Actively Black" />
+                {% endfor %} </a>
+        </div>
+        <div class="drawer-main">
+            <div class="drawer-content py-3">
+                <div class="d-block  px-3">
+                    <small>PAGES</small>
+                </div>
+                <div class="navbar navbar-dark px-0">
+                    <ul class="navbar-nav w-100">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item active">
+                            <a href="{% url 'logout' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item active">
+                            <a href="{% url 'login' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Login</a>
+
+                        </li>
+                        {% endif %}
+
+                        <li class="nav-item">
+                            <a href="{% url 'dashboard' %}" class="nav-link"><i class="fa fa-dashboard mr-2"
+                                    aria-hidden="true"></i>
+                                Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'profile' %}" class="nav-link"><i class="fa fa-user mr-2"
+                                    aria-hidden="true"></i> User
+                                Profile</a>
+                        </li>
+                        {% if request.user.is_superuser %}
+                        <li class="nav-item">
+                            <hr
+                                style="height:2px;border-width:0;color:rgb(250, 248, 248);background-color:rgb(255, 250, 250)">
+
+                            <a href="{% url 'listing' %}" class="nav-link"><i class="fa fa-list mr-2"
+                                    aria-hidden="true"></i>
+                                Listing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'add-user' %}" class="nav-link"><i class="fa fa-edit mr-2"
+                                    aria-hidden="true"></i>Add/Edit
+                                Form</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-user' %}" class="nav-link"><i class="fa fa-user-plus mr-2"
+                                    aria-hidden="true"></i>Add-User
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin:index' %}  " class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>Admin
+                            </a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+            <div class="drawer-footer mt-auto px-3">
+                <p class="mb-0"><a href="#" class="">Actively Black</a></p>
+                {% for name in site %}
+                <p class="mb-0" class="">{{name.site_contect_no1}}</p>
+                <p class="mb-0" class="">{{name.site_contect_no2}}</p>
+
+                {% endfor %}
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="main-header header-common py-3 px-3" style="background-color:#233044;">
+            <nav class="navbar navbar-expand-lg py-0">
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <button class="mr-3 toggle-button bg-transparent border-0 outline-0 text-white border-0"
+                        type="button"> <i class="fa fa-bars" aria-hidden="true"></i></button>
+                    <p style="color: white;" class="m-0">Welcome : {{request.user.first_name}}</p>
+                    <!-- <form class="search-bar form-inline my-lg-0"> -->
+                    <!-- <button class="btn btn-outline-light rounded-0 border-0" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button> -->
+                    <!-- <input class="form-control rounded-0 bg-transparent border-0 " type="search"
+                            placeholder="Search" aria-label="Search"> -->
+                    <!-- </form> -->
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <img class="card-img-top nav-profile" src="{{request.user.profile.avatar.url}}"
+                                alt="Card image cap">
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        {% if messages %}
+        {% for message in messages %}
+        <div class='alert alert-success'>
+            {{message}}
+
+        </div>
+        {% endfor %}
+        {% endif %}
+        <section class="centered-content">
+            <div class="title mb-4">
+                <h1>Product details</h1>
+            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb pl-0 bg-transparent">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                </ol>
+            </nav>
+
+            <div class="row">
+                <div class="col-md-4">
+
+                    <div class="slider">
+                        <input type="radio" name="slide_switch" id="id1" />
+                        <label for="id1">
+                            {% if product_detail.product_image %}
+                            <img src="{{product_detail.product_image.url}}" width="100" />
+                        </label>
+                        <img src="{{product_detail.product_image.url}}" />
+                        {% endif %}
+
+                        <input type="radio" name="slide_switch" id="id2" checked="checked" />
+                        <label for="id2">
+                            {% if product_detail.additional_image_1%}
+                            <img src="{{product_detail.additional_image_1.url}}" width="100" />
+                        </label>
+                        <img src="{{product_detail.additional_image_1.url}}" />
+                        {% endif %}
+
+                        <input type="radio" name="slide_switch" id="id3" />
+                        <label for="id3">
+                            {% if product_detail.additional_image_2%}
+                            <img src="{{product_detail.additional_image_2.url}}" width="100" />
+                        </label>
+                        <img src="{{product_detail.additional_image_2.url}}" />
+                        {% endif %}
+
+                        <input type="radio" name="slide_switch" id="id4" />
+                        <label for="id4">
+                            {% if product_detail.additional_image_3 %}
+                            <img src="{{product_detail.additional_image_3.url}}" width="100" />
+                        </label>
+                        <img src="{{product_detail.additional_image_3.url}}" />
+                        {% endif %}
+
+                        <input type="radio" name="slide_switch" id="id5" />
+                        <label for="id5">
+                            {% if product_detail.additional_image_4%}
+                            <img src="{{product_detail.additional_image_4.url}}" width="100" />
+                        </label>
+                        <img src="{{product_detail.additional_image_4.url}}" />
+                        {% endif %}
+
+
+                    </div>
+
+                </div>
+                <div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-mt-4">
+                    <div class="card border-0 mb-3">
+                        <div class="p-3">
+                            <h5>{{product_detail.product_name}}</h5>
+                            <ul class="list-unstyled">
+                                <li class="menu-item">  
+                                    <img src="{{product_detail.product_image.url}}" width="64" height="50"
+                                        alt="" />
+                                </li>
+                                <li class="menu-item">
+                                    <h5>USD:  {{product_detail.PRDPrice}}</h5>
+                                </li>
+                                <li>
+                                    <p>{{product_detail.content}}</p>
+                                </li>
+                                <li>
+                                    
+                                    <div class="detail-extralink mb-50">
+                                        
+                                        <form action="{% url 'add-to-cart' %}" method = "POST"> 
+                                        <div class="product-extra-link2">
+                                            {% csrf_token %}
+                                            <input type="number" name="qyt" value="1" id="qty-input" class="bg-transparent text-white border-light w-50 form-control outline-0"/>
+                                            <!-- <input type="hidden"  name="qyt" type="text" > -->
+                                            <input type="hidden" value="{{product_detail.id}}" name="product_id">
+                                            <input type="hidden" value="{{product_detail.PRDPrice}}" name="product_Price"><br>
+                                            <button type="submit" class="btn btn-primary button-add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                        
+                                            {% comment %} <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                            <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> {% endcomment %}
+                                        </div>
+                                    </form>
+                                    </div>
+
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+
+
+                <div class="col-lg-5 col-xl-4 ml-auto">
+
+                    <div class="card border-0 mb-3">
+                        <div class="p-3">
+                            <h5>Vendor info...</h5>
+                            <ul class="list-unstyled">
+                                <li class="d-inline-block menu-item">
+                                    <img src="{{product_detail.product_vendor.avatar.url}}" width="64" height="50"
+                                        alt="{{product_detail.product_vendor.user.first_name}}" />
+                                </li>
+                                <li class="d-inline-block menu-item">
+                                    <h6><b>{{product_detail.product_vendor.user.first_name}}
+                                        {{product_detail.product_vendor.user.last_name}}</b></h6>
+                                </li>
+                                <!-- <li class="menu-item">
+                                    <h6><b>Address:</b>   {{product_detail.product_vendor.address}}</h6>
+                                </li>
+                                <li class="menu-item">
+                                    <h6><b>Contect:</b>   {{product_detail.product_vendor.mobile_no}}</h6>
+                                </li> -->
+                                <li class="menu-item"><img src="{% static 'management/images/icon/icon-location.svg'%}"
+                                        alt="" /><strong>Address: </strong>
+                                    <span>{{product_detail.product_vendor.address}}
+                                        {{product_detail.product_vendor.city}},{{product_detail.product_vendor.post_code}}
+                                        {{product_detail.product_vendor.country}}</span></li>
+                                <li class="menu-item"><img src="{% static 'management/images/icon/icon-contect.svg'%}"
+                                        alt="" /><strong>Contact
+                                        Seller:(+91)-</strong><span>{{product_detail.product_vendor.mobile_no}}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+
+            </form>
+            
+
+        <div class="row">
+            <div class="col-md-6">
+            <div class="card border-0 mb-3">
+                <h1>Product Description</h1>
+                <p>
+                    Lorem Ipsum is simply dummy text of the 
+                    printing and typesetting industry. Lorem Ipsum has been
+                     the industry's standard dummy text ever since the 1500s, 
+                     when an unknown printer took a galley of type and scrambled
+                      it to make a type specimen book. It has survived not only five
+                       centuries, but also the leap into electronic typesetting, 
+                       remaining essentially unchanged. It was popularised in the 1960s with the
+                        release of Letraset sheets containing Lorem Ipsum passages, and more recently with 
+                    desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </p>
+            </div>
+            <div class="card border-0 mb-3 text-center p-3"> 
+                
+                <div class="comments-area">
+                    <div class="row">
+                        {% if product_detail.feedbak_number%}
+                        <div class="col-lg-8">
+                            <h4 class="mb-30">Customer Reviews</h4>
+                            <div class="comment-list">
+
+                                {% for rating in product_feedback %}
+                                <div class="single-comment justify-content-between d-flex mb-30">
+                                    <div class="user justify-content-between d-flex">
+                                        <div class="thumb text-center">
+                                            {% if rating.client_name.image %}
+                                                <img src="{{rating.client_name.image.url}}" alt="{{rating.client_name.username}}" />
+                                            {%else%}    
+                                            <img src="{% static 'assets/imgs/blog/author-2.png'%}" alt="{{rating.client_name.username}}" />
+                                            {%endif%}
+                                            <span class="font-heading text-brand d-block">{{rating.client_name.username}}</span>
+                                        </div>
+                                        <div class="desc">
+                                            <div class="d-flex justify-content-between mb-10">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="font-xs text-muted">{{ rating.rating_date|date:"F j,Y"}} at {{ rating.rating_date|date:" g:i A" }} </span>
+                                                </div>
+                                                <div class="product-rate d-inline-block">
+                                                    {%if rating.rate == 1%}
+                                                    <div class="product-rating" style="width: 20%"></div>
+                                                    {%elif rating.rate == 2%}
+                                                    <div class="product-rating" style="width: 40%"></div>
+                                                    {%elif rating.rate == 3%}
+                                                    <div class="product-rating" style="width: 60%"></div>
+                                                    {%elif rating.rate == 4%}
+                                                    <div class="product-rating" style="width: 80%"></div>
+                                                    {%elif rating.rate == 5%}
+                                                    <div class="product-rating" style="width: 100%"></div>
+                                                    {%else%}
+                                                    <div class="product-rating" style="width: 0%"></div>
+                                                    {%endif%}
+                                                </div>
+                                            </div>
+                                            <p class="mb-10">{{rating.client_comment}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <h4 class="mb-30">Customer reviews</h4>
+                            <div class="d-flex mb-30">
+                                <div class="product-rate d-inline-block mr-15">
+                                    <div class="product-rating" style="width: {{product_detail.feedbak_average}}%"></div>
+                                </div>
+                                <h6>{{average_rating}} out of 5</h6>
+                            </div>
+                            <div class="progress">
+                                <span>5 star</span>
+                                <div class="progress-bar" role="progressbar" style="width: {{start_5}}%" aria-valuenow="{{start_5}}" aria-valuemin="0" aria-valuemax="100">{{start_5}}%</div>
+                            </div>
+                            <div class="progress">
+                                <span>4 star</span>
+                                <div class="progress-bar" role="progressbar" style="width: {{start_4}}%" aria-valuenow="{{start_4}}" aria-valuemin="0" aria-valuemax="100">{{start_4}}%</div>
+                            </div>
+                            <div class="progress">
+                                <span>3 star</span>
+                                <div class="progress-bar" role="progressbar" style="width: {{start_3}}%" aria-valuenow="{{start_3}}" aria-valuemin="0" aria-valuemax="100">{{start_3}}%</div>
+                            </div>
+                            <div class="progress">
+                                <span>2 star</span>
+                                <div class="progress-bar" role="progressbar" style="width: {{start_2}}%" aria-valuenow="{{start_2}}" aria-valuemin="0" aria-valuemax="100">{{start_2}}%</div>
+                            </div>
+                            <div class="progress mb-30">
+                                <span>1 star</span>
+                                <div class="progress-bar" role="progressbar" style="width: {{start_1}}%" aria-valuenow="{{start_1}}" aria-valuemin="0" aria-valuemax="100">{{start_1}}%</div>
+                            </div>
+                            <!-- <a href="#" class="font-xs text-muted">How are ratings calculated?</a> -->
+                        </div>
+                        {%  else %}
+                        <div class="col-lg-8">
+                            <p>No reviews!</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="comment-form">
+                    <h4 class="mb-3" style="text-align: left;">Add a review</h4>
+                    <div class="product-rate mb-30"></div>
+                    <div id="message-rate">
+                    </div>
+                    <div class="form-group" style="text-align: left;">
+                        <label>Quality</label> 
+                        <div class="rate">
+                            <input type="radio" id="first" name="star" value="1"><label for="first" title="text">1 star</label>
+                            <input type="radio" id="second" name="star" value="2"> <label for="second" title="text">2 star</label> 
+                            <input type="radio" id="third" name="star" value="3"> <label for="third" title="text">3 star</label> 
+                            <input type="radio" id="fourth" name="star" value="4"> <label for="fourth" title="text">4 star</label>
+                            <input type="radio" id="fifth" name="star" value="5" checked="checked"><label for="fifth" title="text">5 star</label>
+                      </div>
+                     </div>
+                    <div class="row">
+                        <div class="col-lg-8 col-md-12">
+                            <form class="form-contact comment_form form-rating" method="post"  id="{{product_detail.id}}">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <textarea class="form-control w-100" name="client_message" id="client-message" cols="40" rows="8" placeholder="Write Comment" required></textarea>
+                                        </div>
+                                    </div>
+                                 
+                                </div>
+                                <div class="form-group" style="text-align: left;">
+                                    <button type="submit" class="button button-contactForm btn btn-primary">Submit Review</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 mb-3 text-center p-3">     
+                <div class="comment-form">
+                    <h4 class="mb-15">Related products</h4>
+                    <div class=" d-inline-block mb-30"></div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            {%for related_product in related_products%}
+                                <a href="{% url 'product-details' related_product.PRDSlug %}" tabindex="0" class="media mb-3 align-items-center border p-2"> 
+                                    {%if product_detail.product_image%}
+                                    <img class="d-inline-block" src="{{related_product.product_image.url}}" height="100" width="130" alt="" />
+                                    <div class="media-body ml-3">
+                                        <h4 class="text-left">{{related_product.product_name}}</h4>
+                                        <h4 class="text-left">{{request.session.currency}}: {{related_product.PRDPrice}}</h4>
+                                    </div>
+                                    <div class="rating-result" title="{{related_product.feedbak_average}}%">
+                                        <span> </span>
+                                    </div>
+                                    {%else%}
+                                    <img class="default-img" src="{% static 'management/images/product-16-3.jpg'%}" alt="" />
+                                    <img class="hover-img" src="{% static 'management/images/product-16-3.jpg'%}" alt="" />
+                                        
+                                    {%endif%}
+                                    {% endfor %}
+                                </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+              
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 mb-3">
+                <h1>Additional info</h1>
+                <table id="table-name">
+                    <tr>
+                        <td>Product price</td>
+                        <td>{{product_detail.PRDPrice}}</td>
+                    </tr>
+                    <tr>
+                        <td>Product available</td>
+                        <td>{{product_detail.available}}</td>
+                    </tr>
+                    <tr>
+                        <td>Product height</td>
+                        <td>{{product_detail.height}}</td>
+                    </tr>
+                    <tr>
+                        <td>Product width</td>
+                        <td>{{product_detail.width}}</td>
+                    </tr>
+                    <tr>
+                        <td>Product weight</td>
+                        <td>{{product_detail.PRDWeight}}</td>
+                    </tr>
+                    <tr>
+                        <td>Product super category</td>
+                        <td>{{product_detail.product_supercategory}}</td>
+                    </tr>
+                    <tr>
+                        <td>Product main category</td>
+                        <td>{{product_detail.product_maincategory}}</td>
+                    </tr>
+                    <tr>
+                        <td>Product sub category</td>
+                        <td>{{product_detail.product_subcategory}}</td>
+                    </tr>
+                    <tr>
+                        <td>Product mini category</td>
+                        <td>{{product_detail.product_minicategor}}</td>
+                    </tr>
+                    <tr>
+                        <td>Product SKU</td>
+                        <td>{{product_detail.PRDSKU}}</td>
+                    </tr>
+
+                </table>
+                
+            </div>
+            
+        </div>        
+    </div>
+            
+
+        </section>
+
+        <footer class="footer py-3 px-3">
+            {% for name in site %}
+            <p class="mb-0"><a href="{{name.site_url}}">activelyblack.com</a></p>
+            {% endfor %}
+        </footer>
+        <button class="color-picker-btn btn btn-primary">
+            <i class="fa fa-paint-brush" aria-hidden="true"></i>
+        </button>
+        <div class="overlay"></div>
+        <aside class="color-picker">
+            <h6 class="mb-4">Select a Demo</h6>
+            <div class="select-demo p-3 mb-4">
+                <p class="mb-0">Hello! Select your style below. Choose the ones that best fits your needs.</p>
+            </div>
+            <div class="row">
+                <div class="col-6 text-center">
+                    <button class="box rounded dark-picker w-100">
+                        <span class="color-box bg-dark"></span>
+                    </button>
+                    <span class="d-block mt-1">Dark</span>
+                </div>
+                <div class="col-6 text-center">
+                    <button class="box rounded light-picker w-100">
+                        <span class="color-box bg-light"></span>
+                    </button>
+                    <span class="d-block mt-1">Light</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+<script src="http://thecodeplayer.com/uploads/js/prefixfree.js" type="text/javascript"></script>
+
+<script>
+    window.onload = function() { 
+      console.log("workeed")
+      const form = document.querySelector(".form-rating");
+      const divRating = document.querySelector(".rating");
+      const csrf = document.getElementsByName('csrfmiddlewaretoken');
+      const one = document.getElementById("first");
+      const two = document.getElementById("second");
+      const three = document.getElementById("third");
+      const four = document.getElementById("fourth");
+      const five = document.getElementById("fifth");
+      const message = document.getElementById("message");
+      //const cartHover = document.querySelector(".cart-hover");
+      var productRate;
+      const arr = [one, two, three , four , five]
+      const messageRate = document.getElementById("message-rate");
+  
+  
+      const clientMessage = document.getElementById("client-message");
+      
+      const handleSelect = (selection)=>{
+        switch(selection){
+          case 'first':{
+            console.log("first")
+            // handleStartSelect(0);
+            return
+          }
+          case 'second':{
+            console.log("second")
+            // handleStartSelect(1);
+            return
+          }
+          case 'third':{
+            console.log("third")
+            // handleStartSelect(2);
+            return
+          }
+          case 'fourth':{
+            console.log("fourth")
+            // handleStartSelect(3);
+            return
+          }
+          case 'fifth':{
+            console.log("fifth")
+            // handleStartSelect(4);
+            return
+          }
+        }
+      } 
+  
+      //arr.forEach(item=> item.addEventListener("mouseover",(event)=>{
+        
+        //handleSelect(event.target.id);
+      //}))
+  
+      arr.forEach(item=> item.addEventListener("click",(event)=>{
+  
+          productRate= event.target.value
+          console.log("target:", productRate )
+          handleSelect(event.target.id);
+      }))
+  
+      
+      form.addEventListener('submit', e =>{
+        console.log(csrf[0].value, e.target.id, productRate, clientMessage.value);
+        e.preventDefault();
+        if (productRate){
+        $.ajax({
+                type: "POST",            
+                url : "{% url 'product_rating' %}",
+                data: {
+                'csrfmiddlewaretoken': csrf[0].value ,
+                'product_id':e.target.id,
+                'product_rate' : productRate,
+                'client_message': clientMessage.value,
+                    },
+                success : function(response){
+                        console.log('response',response);
+                        messageRate.classList.remove("not-visible")
+                        messageRate.innerHTML=` <div    class="alert align-middle alert-success"><span class="align-middle"> Your review has been successfully added </span> </div>`
+                        setTimeout(()=>{
+                          messageRate.classList.add("not-visible")
+                        
+                          clientMessage.value=""
+  
+                        },5000) 
+                    },
+                error : function(error){
+                  messageRate.classList.remove("not-visible")
+                  messageRate.innerHTML=` <div    class="alert align-middle alert-warning"><span class="align-middle"> Ops ... some thing went wrong !</span> </div>`
+  
+                        setTimeout(()=>{
+                            messageRate.classList.add("not-visible")
+                        },2000) 
+                    },
+        
+  
+        })
+        //if end
+      }else{
+        console.log("must select stars")
+        messageRate.classList.remove("not-visible")
+                  messageRate.innerHTML=` <div    class="alert align-middle alert-danger"><span class="align-middle"> You Must Select Stars !</span> </div>`
+  
+                        setTimeout(()=>{
+                            messageRate.classList.add("not-visible")
+                        },2000) 
+      }
+  
+    }) 
+  
+  
+  
+    }
+
+
+  </script>  
+
+  
+
+
+
+
+{% endblock %}
+
+
+
+<!-- <div class="slider">
+	<input type="radio" name="slide_switch" id="id1"/>
+	<label for="id1">
+		<img src="{{product_detail.product_image.url}}" width="100"/>
+	</label>
+	<img src="{{product_detail.product_image.url}}"/>
+	
+	<input type="radio" name="slide_switch" id="id2" checked="checked"/>
+	<label for="id2">
+		<img src="{{product_detail.additional_image_1.url}}" width="100"/>
+	</label>
+	<img src="{{product_detail.additional_image_1.url}}"/>
+	
+	<input type="radio" name="slide_switch" id="id3"/>
+	<label for="id3">
+		<img src="{{product_detail.additional_image_2.url}}" width="100"/>
+	</label>
+	<img src="{{product_detail.additional_image_2.url}}"/>
+	
+	<input type="radio" name="slide_switch" id="id4"/>
+	<label for="id4">
+		<img src="{{product_detail.additional_image_3.url}}" width="100"/>
+	</label>
+	<img src="{{product_detail.additional_image_3.url}}"/>
+	
+	<input type="radio" name="slide_switch" id="id5"/>
+	<label for="id5">
+		<img src="{{product_detail.additional_image_4.url}}" width="100"/>
+	</label>
+	<img src="{{product_detail.additional_image_4.url}}"/>
+</div> -->
+
+
+<!-- <script src="http://thecodeplayer.com/uploads/js/prefixfree.js" type="text/javascript"></script>

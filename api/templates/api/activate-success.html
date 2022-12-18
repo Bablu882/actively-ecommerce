@@ -1,0 +1,29 @@
+{% extends 'management/base.html' %}
+{% load static %}
+{% block title %}Actively|login{% endblock %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+    
+    <div class="dashboard dark-theme">
+        <div class="main-content mw-100">
+            <div class="drawer-header header-common py-3 px-3 text-center">
+                <a href="#">
+                    <img src="{% static 'management/images/logo.png' %}" alt="Actively Black" />
+                </a>
+            </div>
+            <section class="centered-content h-100">
+                <div class="row m-0 align-items-center h-100">
+                    <div class="col-12 col-lg-5 mx-auto">
+                        <div class="login card border-0 py-5 px-4">
+                            <h4 class="mb-5 text-center">Actively-Black</h4>
+                            <h5>Your has been activated now you can login..</h5>
+                            <h5>Go to your mobile app login page... </h5>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    
+    </div>
+{% endblock %}

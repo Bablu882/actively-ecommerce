@@ -1,0 +1,293 @@
+{% extends 'management/base.html' %}
+{% load static %}
+{% block title%}
+Actively||product-list
+{% endblock %}
+{% block content %}
+{% load crispy_forms_tags %}
+<style>
+    .card-img, .card-img-bottom, .card-img-top {
+    -ms-flex-negative: 0;
+    flex-shrink: 10;
+    width: 100%;
+    max-width: 40px;
+    height: 40px;
+}
+.rounded-circle {
+    border-radius: 50%!important;
+}
+</style>
+    <div class="dashboard dark-theme">
+        <aside class="drawer">
+            <div class="drawer-header header-common py-3 px-3 text-center">
+                <a href="#">
+                    {% for name in site %}
+                    <img src="{{name.site_logo.url}}" alt="Actively Black" />
+                    {% endfor %}                </a>
+            </div>
+            <div class="drawer-main">
+                <div class="drawer-content py-3">
+                    <div class="d-block  px-3">
+                        <small>PAGES</small>
+                    </div>
+                    <div class="navbar navbar-dark px-0">
+                        <ul class="navbar-nav w-100">
+        
+                            <li class="nav-item active">
+                                <a href="{% url 'logout' %}" class="nav-link"><i class="fa fa-lock mr-2" aria-hidden="true"></i>
+                                    Logout</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link"><i class="fa fa-dashboard mr-2" aria-hidden="true"></i>
+                                    Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'profile' %}" class="nav-link"><i class="fa fa-user mr-2" aria-hidden="true"></i> User
+                                    Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <hr style="height:2px;border-width:0;color:rgb(250, 248, 248);background-color:rgb(255, 250, 250)">
+
+                                <a href="{% url 'listing' %}" class="nav-link"><i class="fa fa-list mr-2" aria-hidden="true"></i>
+                                    Listing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'add-user' %}" class="nav-link"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Add/Edit
+                                    Form</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'admin-add-user' %}" class="nav-link"><i class="fa fa-user-plus mr-2" aria-hidden="true"></i>Add-User
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'admin:index' %}  " class="nav-link"><i class="fa fa-lock mr-2" aria-hidden="true"></i>Admin
+                                    </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="drawer-footer mt-auto px-3">
+                    <p class="mb-0"><a href="#" class="">Actively Black</a></p>
+                    {% for name in site %}
+                    <p class="mb-0" class="">{{name.site_contect_no1}}</p>
+                    <p class="mb-0" class="">{{name.site_contect_no2}}</p>
+
+                    {% endfor %}                
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <header class="main-header header-common py-3 px-3" style="background-color:#233044;">
+                <nav class="navbar navbar-expand-lg py-0">
+    
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+    
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <button class="mr-3 toggle-button bg-transparent border-0 outline-0 text-white border-0" type="button"> <i class="fa fa-bars" aria-hidden="true"></i></button>
+                        <p style="color: white;" class="m-0">Welcome : {{request.user.first_name}}</p>
+                        <!-- <form class="search-bar form-inline my-lg-0"> -->
+                            <!-- <button class="btn btn-outline-light rounded-0 border-0" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button> -->
+                            <!-- <input class="form-control rounded-0 bg-transparent border-0 " type="search"
+                                placeholder="Search" aria-label="Search"> -->
+                        <!-- </form> -->
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">
+                                    <i class="fa fa-ellipsis-v"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fa fa-envelope"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fa fa-envelope"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">
+                                    <i class="fa fa-power-off"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <img class="card-img-top nav-profile" src="{{request.user.profile.avatar.url}}"
+                                alt="Card image cap">
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            {% if messages %}
+            {% for message in messages %}
+            <div class='alert alert-success'>
+                {{message}}
+        
+            </div>
+            {% endfor %}
+            {% endif %}
+            <section class="centered-content">
+                <div class="title mb-4">
+                    <h1>Product List</h1>
+                </div>
+                <section class="content-main">
+                    <div class="content-header">
+                        
+                        <div>
+                            <!-- <a href="#" class="btn btn-light rounded font-md">Export</a>
+                            <a href="#" class="btn btn-light rounded font-md">Import</a> -->
+                            <a href="{% url 'supplier-add-product' %}" class="btn btn-primary btn-sm rounded">Add product</a>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <header class="card-header">
+                            <div class="row align-items-center">
+                              
+                                <div class="col-md-2 col-5">
+                                    <select class="form-select select-status" id="select-status">
+                                        <option value="All" selected>Show all</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </header>
+                        <div class="toolbar my-3 px-3">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="acions">
+                                        
+                                        <select class="form-select mySelect action-dropdown dropdown-toggle py-3 px-4 rounded d-inline-block" id="mySelect">
+                                            <option selected disabled value="PRDPrice" >Choose Filter</option>
+                                            <option value="-date" >Date, new to old</option>
+                                            <option value="date">Date, old to new</option>
+                                            <option value="PRDPrice">Price, low to high</option>
+                                            <option value="-PRDPrice">Price, high to low</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="records ml-3 totall-product" id="product-num" >
+                                        <p>We found<strong class="text-brand">0</strong> items for you!</p>
+                                    </div>
+                                </div>
+                                <div class="search-toolbar">
+                                    <div class="search-tool">
+                                        <form class="d-flex">
+                                            <input class="form-control rounded-right-0" type="search" placeholder="Search"
+                                                aria-label="Search">
+                                            <button class="btn btn-primary rounded-left-0" type="submit">Search</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="filterList">
+                                    <button class="icon-button" class="dropdown-toggle" id="paginationDropdown"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-bars" aria-hidden="true"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-list dropdown-menu-right"
+                                        aria-labelledby="paginationDropdown">
+                                        <li><a href="#" class="dropdown-item">hello</a></li>
+                                        <li><a href="#" class="dropdown-item">Dropdown menu two</a></li>
+                                        <li><a href="#" class="dropdown-item">Dropdown menu three</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card-header end// -->
+                        <!-- <div id="products-list" class="card-body"> -->
+
+                            <div class="listing" class="card-body">
+                                <div class="enhanced-table">
+                                    <div class="table-repsponsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product ID</th>
+                                                    <th>product Name</th>
+                                                    <th>Product Price</th>
+                                                    <th>Image</th>
+                                                    <th>Active</th>
+                                                    <th>Product Pieces</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="products-list">
+                                                
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            
+                            {% comment %}  {% endcomment %}
+                            <!-- itemlist  .// -->
+                
+                        <!-- </div> -->
+                        <!-- card-body end// -->
+                    </div>
+                    <!-- card end// -->
+                    <div class="pagination-area mt-30 mb-50">
+                        <nav aria-label="Page navigation example">
+                            <div id="spinner-box" class="not-visible  text-center">
+                                <div class="spinner-border" role="status">
+                                  <span class="sr-only"></span>
+                                </div>
+                              </div>
+                              <div id="empty-box" class="not-visible  text-center">
+                                
+                              </div>
+                
+                            <div id ="loading-box" class="text-center">
+                                <button id="load-btn" type="button" class="btn btn-primary">Load More</button>
+                                
+                              </div>
+                        </nav>
+                    </div>
+                </section>
+            </section>
+            <footer class="footer py-3 px-3">
+                {% for name in site %}
+                <p class="mb-0"><a href="{{name.site_url}}">activelyblack.com</a></p>
+                {% endfor %}            
+            </footer>
+            <button class="color-picker-btn btn btn-primary">
+                <i class="fa fa-paint-brush" aria-hidden="true"></i>
+            </button>
+            <div class="overlay"></div>
+            <aside class="color-picker">
+                <h6 class="mb-4">Select a Demo</h6>
+                <div class="select-demo p-3 mb-4">
+                    <p class="mb-0">Hello! Select your style below. Choose the ones that best fits your needs.</p>
+                </div>
+                <div class="row">
+                    <div class="col-6 text-center">
+                        <button class="box rounded dark-picker w-100">
+                            <span class="color-box bg-dark"></span>
+                        </button>
+                        <span class="d-block mt-1">Dark</span>
+                    </div>
+                    <div class="col-6 text-center">
+                        <button class="box rounded light-picker w-100">
+                            <span class="color-box bg-light"></span>
+                        </button>
+                        <span class="d-block mt-1">Light</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+    <script src="{% static 'management/js/product-list.js' %}"></script>
+
+
+{% endblock %}

@@ -1,0 +1,281 @@
+{% extends 'management/base.html' %}
+{% load static %}
+{% block title%}
+Actively||catagory-list
+{% endblock %}
+{% block content %}
+<div class="dashboard dark-theme">
+    <aside class="drawer">
+        <div class="drawer-header header-common py-3 px-3 text-center">
+            <a href="#">
+                {% for name in site %}
+                <img src="{{name.site_logo.url}}" alt="Actively Black" />
+                {% endfor %}            </a>
+        </div>
+        <div class="drawer-main">
+            <div class="drawer-content py-3">
+                <div class="d-block  px-3">
+                    <small>PAGES</small>
+                </div>
+                <div class="navbar navbar-dark px-0">
+                    <ul class="navbar-nav w-100">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item active">
+                            <a href="{% url 'logout' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item active">
+                            <a href="{% url 'login' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Login</a>
+
+                        </li>
+                        {% endif %}
+
+                        <li class="nav-item">
+                            <a href="{% url 'dashboard' %}" class="nav-link"><i class="fa fa-dashboard mr-2"
+                                    aria-hidden="true"></i>
+                                Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'profile' %}" class="nav-link"><i class="fa fa-user mr-2"
+                                    aria-hidden="true"></i> User
+                                Profile</a>
+                        </li>
+                        {% if request.user.is_superuser %}
+                        <li class="nav-item">
+                            <hr style="height:2px;border-width:0;color:rgb(250, 248, 248);background-color:rgb(255, 250, 250)">
+
+                            <a href="{% url 'listing' %}" class="nav-link"><i class="fa fa-list mr-2"
+                                    aria-hidden="true"></i>
+                                Listing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'add-user' %}" class="nav-link"><i class="fa fa-edit mr-2"
+                                    aria-hidden="true"></i>Add/Edit
+                                Form</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-user' %}" class="nav-link"><i class="fa fa-user-plus mr-2"
+                                    aria-hidden="true"></i>Add-User
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin:index' %}  " class="nav-link"><i class="fa fa-lock mr-2" aria-hidden="true"></i>Admin
+                                </a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+            <div class="drawer-footer mt-auto px-3">
+                <p class="mb-0"><a href="#" class="">Actively Black</a></p>
+                {% for name in site %}
+                <p class="mb-0" class="">{{name.site_contect_no1}}</p>
+                <p class="mb-0" class="">{{name.site_contect_no2}}</p>
+
+                {% endfor %}            </div>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="main-header header-common py-3 px-3" style="background-color:#233044;">
+            <nav class="navbar navbar-expand-lg py-0">
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <button class="mr-3 toggle-button bg-transparent border-0 outline-0 text-white border-0" type="button"> <i class="fa fa-bars" aria-hidden="true"></i></button>
+                    <p style="color: white;" class="m-0">Welcome : {{request.user.first_name}}</p>
+                    <!-- <form class="search-bar form-inline my-lg-0"> -->
+                        <!-- <button class="btn btn-outline-light rounded-0 border-0" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button> -->
+                        <!-- <input class="form-control rounded-0 bg-transparent border-0 " type="search"
+                            placeholder="Search" aria-label="Search"> -->
+                    <!-- </form> -->
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <img class="card-img-top nav-profile" src="{{request.user.profile.avatar.url}}"
+                            alt="Card image cap">
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        {% if messages %}
+        {% for message in messages %}
+        <div class='alert alert-success'>
+            {{message}}
+    
+        </div>
+        {% endfor %}
+        {% endif %}
+        <section class="centered-content">
+            <div class="title mb-4">
+                <h1>Category list</h1>
+            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb pl-0 bg-transparent">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                </ol>
+            </nav>
+
+            <div class="row">
+                <div class="col-lg-5 col-xl-4">
+                    
+                    <!-- <div class="card border-0 mb-3">
+                        <div class="p-3">
+                            <h5>Elsewhere</h5>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <i class="fa fa-twitter mr-1 icon-contact"></i>
+                                    <a href="{{profiles.teitter}}" class="text-primary">Twitter</a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div> -->
+                    <h1>Super category</h1>
+                    <div class="card border-0 mb-3">
+                        <div class="p-3">
+                            <ul class="navbar-nav ml-auto">
+                                {% for super in supercategory %}
+
+                                    <li class="nav-item d-flex align-items-center mb-3">
+                                        
+                                        <img class="card-img-top nav-profile mr-3" src="{{super.category_image.url}}"
+                                        alt="Card image cap">
+                                        <h5>{{super.name}}</h5>
+                                    </li>
+                                    {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h1>Main category</h1>
+                    <div class="card border-0 mb-3">
+                        <div class="p-3">
+                            <ul class="navbar-nav ml-auto">
+                                {% for main in maincategory %}
+
+                                    <li class="nav-item d-flex align-items-center mb-3">
+                                        
+                                        <img class="card-img-top nav-profile mr-3" src="{{main.category_image.url}}"
+                                        alt="Card image cap">
+                                        <h5>{{main.name}}</h5>
+                                    </li>
+                                    {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h1>Sub category</h1>
+                    <div class="card border-0 mb-3">
+                        <div class="p-3">
+                            <ul class="navbar-nav ml-auto">
+                                {% for sub in subcategory %}
+
+                                    <li class="nav-item d-flex align-items-center mb-3">
+                                        
+                                        <img class="card-img-top nav-profile mr-3" src="{{sub.category_image.url}}"
+                                        alt="Card image cap">
+                                        <h5>{{sub.name}}</h5>
+                                    </li>
+                                    {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h1>Mini category</h1>
+                    <div class="card border-0 mb-3">
+                        <div class="p-3">
+                            <ul class="navbar-nav ml-auto">
+                                {% for mini in subcategory %}
+
+                                    <li class="nav-item d-flex align-items-center mb-3">
+                                        
+                                        <img class="card-img-top nav-profile mr-3" src="{{mini.category_image.url}}"
+                                        alt="Card image cap">
+                                        <h5>{{mini.name}}</h5>
+                                    </li>
+                                    {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+                     
+                </div>
+                
+                
+            </div>
+            
+            </form>
+        </section>
+        <footer class="footer py-3 px-3">
+            {% for name in site %}
+            <p class="mb-0"><a href="{{name.site_url}}">activelyblack.com</a></p>
+            {% endfor %}        
+        </footer>
+        <button class="color-picker-btn btn btn-primary">
+            <i class="fa fa-paint-brush" aria-hidden="true"></i>
+        </button>
+        <div class="overlay"></div>
+        <aside class="color-picker">
+            <h6 class="mb-4">Select a Demo</h6>
+            <div class="select-demo p-3 mb-4">
+                <p class="mb-0">Hello! Select your style below. Choose the ones that best fits your needs.</p>
+            </div>
+            <div class="row">
+                <div class="col-6 text-center">
+                    <button class="box rounded dark-picker w-100">
+                        <span class="color-box bg-dark"></span>
+                    </button>
+                    <span class="d-block mt-1">Dark</span>
+                </div>
+                <div class="col-6 text-center">
+                    <button class="box rounded light-picker w-100">
+                        <span class="color-box bg-light"></span>
+                    </button>
+                    <span class="d-block mt-1">Light</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+
+{% endblock %}

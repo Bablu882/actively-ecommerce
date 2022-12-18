@@ -1,0 +1,387 @@
+{% extends 'management/base.html'%}
+{% block title %}Actively|shop{% endblock %}
+{% block content %}
+{% load static %}
+<style>
+   .content-models{
+    background-color: rgb(34, 48, 75);
+   }
+
+</style>
+
+<div class="dashboard dark-theme">
+    <aside class="drawer">
+        <div class="drawer-header header-common py-3 px-3 text-center">
+            <a href="#">
+                {% for name in site %}
+                <img src="{{name.site_logo.url}}" alt="Actively Black" />
+                {% endfor %}            </a>
+        </div>
+        <div class="drawer-main">
+            <div class="drawer-content py-3">
+                <div class="d-block  px-3">
+                    <small>PAGES</small>
+                </div>
+                <div class="navbar navbar-dark px-0">
+                    <ul class="navbar-nav w-100">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item active">
+                            <a href="{% url 'logout' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item active">
+                            <a href="{% url 'login' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Login</a>
+
+                        </li>
+                        {% endif %}
+
+                        <li class="nav-item">
+                            <a href="{% url 'dashboard' %}" class="nav-link"><i class="fa fa-dashboard mr-2"
+                                    aria-hidden="true"></i>
+                                Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'profile' %}" class="nav-link"><i class="fa fa-user mr-2"
+                                    aria-hidden="true"></i> User
+                                Profile</a>
+                        </li>
+                        {% if request.user.is_superuser %}
+                        <li class="nav-item">
+                            <hr style="height:2px;border-width:0;color:rgb(250, 248, 248);background-color:rgb(255, 250, 250)">
+
+                            <a href="{% url 'listing' %}" class="nav-link"><i class="fa fa-list mr-2"
+                                    aria-hidden="true"></i>
+                                Listing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'add-user' %}" class="nav-link"><i class="fa fa-edit mr-2"
+                                    aria-hidden="true"></i>Add/Edit
+                                Form</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-user' %}" class="nav-link"><i class="fa fa-user-plus mr-2"
+                                    aria-hidden="true"></i>Add-User
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin:index' %}  " class="nav-link"><i class="fa fa-lock mr-2" aria-hidden="true"></i>Admin
+                                </a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+            <div class="drawer-footer mt-auto px-3">
+                <p class="mb-0"><a href="#" class="">Actively Black</a></p>
+                {% for name in site %}
+                <p class="mb-0" class="">{{name.site_contect_no1}}</p>
+                <p class="mb-0" class="">{{name.site_contect_no2}}</p>
+
+                {% endfor %}            
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="main-header header-common py-3 px-3" style="background-color:#233044;">
+            <nav class="navbar navbar-expand-lg py-0">
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <button class="mr-3 toggle-button bg-transparent border-0 outline-0 text-white border-0" type="button"> <i class="fa fa-bars" aria-hidden="true"></i></button>
+                    <p style="color: white;" class="m-0">Welcome : {{request.user.first_name}}</p>
+                    
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <img class="card-img-top nav-profile" src="{{request.user.profile.avatar.url}}"
+                            alt="Card image cap">
+                        </li>
+                        <!-- <a class="mini-cart-icon ml-2" href="">
+                            <img alt="Nest" style="filter: invert(1);" src="{% static 'management/images/cart-icon.svg' %}" />
+                            <span class="pro-count blue"></span>
+                            <span class="pro-count blue">0</span>
+                        </a> -->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        {% if messages %}
+        {% for message in messages %}
+        <div class='alert alert-success'>
+            {{message}}
+    
+        </div>
+        {% endfor %}
+        {% endif %}
+        <section class="centered-content">
+            <div class="title mb-4">
+                <h1>Payment Request</h1>
+            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb pl-0 bg-transparent">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                </ol>
+            </nav>
+            <div class="card mb-4">
+                <div class="card-body">
+                    
+                    <!-- card-body.// -->
+                    
+                    <div class="row g-4">
+                        <div class="col-md-12 col-lg-4 col-xl-2">
+                            <article class="box">
+                                <p class="mb-0 text-muted">Balance:</p>
+                                <h5 class="text-success">${{vendor.blance|floatformat:"2"}}</h5>
+                                <p class="mb-0 text-muted">Last Requested:</p>
+                                <h5 class="text-success mb-0">${{vendor.requested|floatformat:"2"}}</h5>
+                            </article>
+                        </div>
+                        <!--  col.// -->
+                         
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+                            <!-- <h6>Contacts</h6> -->
+                            <p>
+                                Bank Name: {{bank_info_obj.bank_name}}<br />
+                                Account Number: {{bank_info_obj.account_number}} <br />
+                                Swift Code: {{bank_info_obj.swift_code}}
+                            </p>
+                        </div>
+                        <!--  col.// -->
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+                            <!-- <h6>Address</h6> -->
+                            <p>
+                                Country: {{bank_info_obj.country}} <br />
+                                Account Name: {{bank_info_obj.account_name}} <br />
+                                Paypal Email: {{bank_info_obj.paypal_email}}
+                            </p>
+                        </div>
+                        <!--  col.// -->
+                        <div class="col-sm-6 col-xl-4 text-xl-end">
+                            <map class="mapbox position-relative d-inline-block">
+                                <!-- <a href="#payment_request_modal" class="btn btn-primary request_btn" data-bs-toggle="modal">Payment Request <i class="material-icons md-launch"></i> </a> -->
+                                <button type="button" class="btn btn-primary equest_btn" data-toggle="modal" data-target="#payment_request_modal">
+                                    Payment Request <i class="material-icons md-launch"></i> 
+                                    </button>
+                            </map>
+                        </div>
+                        <!--  col.// -->
+                    </div>
+                    <!--  row.// -->
+                </div>
+                <!--  card-body.// -->
+            </div>
+            <div class="card mb-4">
+                
+                <!-- card-header end// -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Amount</th>
+                                    <th>FEE</th>
+                                    <th>Method</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Comment</th>
+                                    <!-- <th class="text-end">Action</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in payments%}
+                                <tr>
+                                    <td>#{{payment.id}}</td>
+                                    <td>${{payment.request_amount}}</td>
+                                    <td>${{payment.fee}}</td>
+                                    <td>
+                                        {% if payment.method == "Paypal"%}
+                                        <div class="icontext">
+                                            <img class="icon border" src="{% static 'management/images/icon/3.png' %}" height="30" width="30" alt="Paypal">
+                                            <span class="text text-muted">{{payment.method}}</span>
+                                        </div>
+                                        {%else%}
+                                        <div class="icontext">
+                                            <img class="icon border" src="{% static 'management/images/icon/5.png' %}" height="30" width="30" alt="Bank">
+                                            <span class="text text-muted">{{payment.method}}</span>
+                                        </div>
+                                        {%endif%}
+                                    </td>
+                                    <td>
+                                        {% if payment.status == "Paid" %}
+                                            <span class="badge rounded-pill alert-success">{{payment.status}}</span>
+                                        {%elif payment.status == "Pending" %}
+                                            <span class="badge rounded-pill badge-soft-info">{{payment.status}}</span>
+                                        {%elif payment.status == "Progressing" %}
+                                            <span class="badge rounded-pill badge-soft-warning">{{payment.status}}</span>
+                                        {%else%}    
+                                        <span class="badge rounded-pill badge-soft-danger">{{payment.status}}</span>
+                                        {%endif%}
+                                    </td>
+                                    <td>{{payment.date}}</td>
+                                    {%if payment.comment %}
+                                    <td>{{payment.comment}}</td>
+                                    {%else%}
+                                    <td></td>
+                                    {%endif%}
+                                    <!-- <td class="text-end">
+                                        <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">View details</a>
+                                    </td> -->
+                                </tr>
+                              {%endfor%}
+                                
+                            </tbody>
+                        </table>
+                        <!-- table-responsive.// -->
+                    </div>
+                </div>
+                <!-- card-body end// -->
+            </div>
+            {%if payments.has_other_pages %}
+    <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                {%if payments.has_previous%}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{payments.previous_page_number}}"><i class="material-icons md-chevron_left"></i></a>
+                </li>
+                {%endif%}
+                <li class="page-item active"><a class="page-link" href="#">{{payments.number}}</a></li>
+                {%if payments.paginator.num_pages > payments.number  %}
+                
+                <li class="page-item"><a class="page-link" href="?page={{payments.number|add:1}}">{{payments.number|add:1}}</a></li>
+                {%endif%}
+                 <!-- <li class="page-item"><a class="page-link" href="#">3</a></li> -->
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                
+                <li class="page-item"><a class="page-link" href="?page={{payments.paginator.num_pages}}">{{payments.paginator.num_pages}}</a></li>
+                {%if payments.has_next%}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{payments.next_page_number}}"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+                {%endif%}
+            </ul>
+        </nav>
+    </div>
+    {%endif%} 
+        </section>
+
+             <!-- Payment Request Moodal -->
+
+        <div class="modal fade custom-modal" id="payment_request_modal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content content-models">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Payment Request</h3>
+                        <button type="button" class="close btn-primary" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="payment_request_form" method="post" action ="{% url 'request-payment' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="payment_type" id="payment_type" value="1">
+                            <div class="form-group">
+                                <label>Available balance</label>
+                                <input type="text" name="available_balance" id="balance" class="form-control"   value="${{vendor.blance|floatformat:'2'}}" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount to Withdraw</label>
+                                <input type="number" name="request_amount" id="request_amount" step=any class="form-control"  required>
+                                <span class="help-block"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Choase Method</label>
+                                <select name="method" class="form-select">
+                                    <option value="Paypal">Paypal</option>
+                                    <option value="Bank">Bank</option>
+                                    
+                                </select>
+                            </div> 
+                            <div class="form-group">
+                                <label>Description (Optional)</label>
+                                <textarea class="form-control" name="description" id="description"></textarea>
+                                <span class="help-block"></span>
+                            </div>
+                        
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="submit" id="request_btn" class="btn btn-primary">Request</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="footer py-3 px-3">
+            {% for name in site %}
+            <p class="mb-0"><a href="{{name.site_url}}">activelyblack.com</a></p>
+            {% endfor %}        
+        </footer>
+        <button class="color-picker-btn btn btn-primary">
+            <i class="fa fa-paint-brush" aria-hidden="true"></i>
+        </button>
+        <div class="overlay"></div>
+        <aside class="color-picker">
+            <h6 class="mb-4">Select a Demo</h6>
+            <div class="select-demo p-3 mb-4">
+                <p class="mb-0">Hello! Select your style below. Choose the ones that best fits your needs.</p>
+            </div>
+            <div class="row">
+                <div class="col-6 text-center">
+                    <button class="box rounded dark-picker w-100">
+                        <span class="color-box bg-dark"></span>
+                    </button>
+                    <span class="d-block mt-1">Dark</span>
+                </div>
+                <div class="col-6 text-center">
+                    <button class="box rounded light-picker w-100">
+                        <span class="color-box bg-light"></span>
+                    </button>
+                    <span class="d-block mt-1">Light</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+ <script>
+
+ </script>
+{% endblock %}

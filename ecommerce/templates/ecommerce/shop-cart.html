@@ -1,0 +1,446 @@
+{% extends 'management/base.html'%}
+{% block title %}Actively|cart{% endblock %}
+{% block content %}
+{% load static %}
+{% load currency %}
+{% currency_context %}
+
+<style>
+    .apply-coupon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.apply-coupon input {
+  height: 51px;
+  border-radius: 0px 0 0 0px;
+  background-image: url("../imgs/theme/icons/coupon.png");
+  background-position: 20px center;
+  background-repeat: no-repeat;
+  padding-left: 100px;
+}
+
+.apply-coupon button {
+  min-width: 150px;
+  height: 51px;
+  border-radius: 0 10px 10px 0;
+  background-color: #253D4E;
+}
+
+.apply-coupon button:hover {
+  background-color: #3BB77E;
+}
+ 
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group input {
+  background: rgb(5, 61, 124);
+  border: 1px solid #ececec;
+  height: 64px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding-left: 20px;
+  font-size: 16px;
+  width: 100%;
+}
+.form-group select {
+  background: rgb(5, 61, 124);
+  border: 1px solid #ececec;
+  height: 64px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding-left: 20px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.form-group input:focus {
+  background: white;
+  border-color: #BCE3C9;
+} 
+.custom_select{
+    background-color:rgb(5, 61, 124) ;
+}
+</style>
+<div class="dashboard dark-theme">
+    <aside class="drawer">
+        <div class="drawer-header header-common py-3 px-3 text-center">
+            <a href="#">
+                {% for name in site %}
+                <img src="{{name.site_logo.url}}" alt="Actively Black" />
+                {% endfor %}            </a>
+        </div>
+        <div class="drawer-main">
+            <div class="drawer-content py-3">
+                <div class="d-block  px-3">
+                    <small>PAGES</small>
+                </div>
+                <div class="navbar navbar-dark px-0">
+                    <ul class="navbar-nav w-100">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item active">
+                            <a href="{% url 'logout' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item active">
+                            <a href="{% url 'login' %}" class="nav-link"><i class="fa fa-lock mr-2"
+                                    aria-hidden="true"></i>
+                                Login</a>
+
+                        </li>
+                        {% endif %}
+
+                        <li class="nav-item">
+                            <a href="{% url 'dashboard' %}" class="nav-link"><i class="fa fa-dashboard mr-2"
+                                    aria-hidden="true"></i>
+                                Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'profile' %}" class="nav-link"><i class="fa fa-user mr-2"
+                                    aria-hidden="true"></i> User
+                                Profile</a>
+                        </li>
+                        {% if request.user.is_superuser %}
+                        <li class="nav-item">
+                            <hr style="height:2px;border-width:0;color:rgb(250, 248, 248);background-color:rgb(255, 250, 250)">
+
+                            <a href="{% url 'listing' %}" class="nav-link"><i class="fa fa-list mr-2"
+                                    aria-hidden="true"></i>
+                                Listing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'add-user' %}" class="nav-link"><i class="fa fa-edit mr-2"
+                                    aria-hidden="true"></i>Add/Edit
+                                Form</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-user' %}" class="nav-link"><i class="fa fa-user-plus mr-2"
+                                    aria-hidden="true"></i>Add-User
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin:index' %}  " class="nav-link"><i class="fa fa-lock mr-2" aria-hidden="true"></i>Admin
+                                </a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+            <div class="drawer-footer mt-auto px-3">
+                <p class="mb-0"><a href="#" class="">Actively Black</a></p>
+                {% for name in site %}
+                <p class="mb-0" class="">{{name.site_contect_no1}}</p>
+                <p class="mb-0" class="">{{name.site_contect_no2}}</p>
+
+                {% endfor %}            </div>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="main-header header-common py-3 px-3" style="background-color:#233044;">
+            <nav class="navbar navbar-expand-lg py-0">
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <button class="mr-3 toggle-button bg-transparent border-0 outline-0 text-white border-0" type="button"> <i class="fa fa-bars" aria-hidden="true"></i></button>
+                    <p style="color: white;" class="m-0">Welcome : {{request.user.first_name}}</p>
+                    <!-- <form class="search-bar form-inline my-lg-0"> -->
+                        <!-- <button class="btn btn-outline-light rounded-0 border-0" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button> -->
+                        <!-- <input class="form-control rounded-0 bg-transparent border-0 " type="search"
+                            placeholder="Search" aria-label="Search"> -->
+                    <!-- </form> -->
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <img class="card-img-top nav-profile" src="{{request.user.profile.avatar.url}}"
+                            alt="Card image cap">
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        {% if messages %}
+        {% for message in messages %}
+        <div class='alert alert-success'>
+            {{message}}
+    
+        </div>
+        {% endfor %}
+        {% endif %}
+        <section class="centered-content">
+            <div class="title mb-4">
+                <h1>Your Cart</h1>
+            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb pl-0 bg-transparent">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                </ol>
+            </nav>
+            {% if order_details %}
+            <div class="row"> 
+                <div class="col-md-8">
+                    {% for item in order_details %}
+                <div class="media border mb-3 align-items-center">
+                    <a href="{% url 'product-details' item.product.PRDSlug %}"><img src="{{item.product.product_image.url}}" class="h-100" width="130" alt=""></a>
+                    <div class="media-body ml-3">
+                        <h5><b> Product Name:</b>  {{item.product.product_name}}</h5>
+                        <h5><b>Quantity:</b>  {{item.quantity}}</h5>
+                        <h5><b>Price:</b>  {{request.session.currency }} {{item.price|currency:request.session.currency  }} </h5>
+                        <h5><b>Weight:</b>  {{item.weight}}</h5>
+                        <h5><b>Subtotal:</b>  {{request.session.currency}} {% widthratio item.price|currency:request.session.currency  1 item.quantity%} </h5>
+                    </div>
+                    <a class="mr-3 align-self-start mt-3" href="{% url "remove-product" productdeatails_id=item.id %}"><button type="button" class="btn btn-danger mr-3 align-self-start mt-3">
+                        <i class="fa fa-trash fa-2x"></i>
+                    </button></a>
+                </div>
+                
+                {% endfor %}
+            </div>
+
+            <div class="col-md-4">
+                <div class="media border mb-3 align-items-center" style="background-color:rgb(39, 39, 94)">
+                    <div class="media-body ml-3">
+                    <h1>SubTotal: <b class="text-success">{{request.session.currency}} {{f_total|currency:request.session.currency}} </b></h1>
+                    <h1>SubItems: <b class="text-success">{{order_details.count}} </b></h1>
+                    <h1>Shipping: <b class="text-success">Calculated next </b></h1>
+                    {% if coupon_id%}
+                    <h5 class="text-heading text-end">{{code}} <span> -{{request.session.currency}}{{value|floatformat:"2"|currency:request.session.currency}}</h4>
+                    {% endif %}
+                    <h1>TotalAmount: <b class="text-success">{{request.session.currency}}{{total|floatformat:"2"|currency:request.session.currency}}</b></h1>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="row">
+         <div class="col-md-8">
+            <form method="post" class="apply-coupon">
+                {% csrf_token %}
+                <input name="code" type="text" placeholder="Enter Coupon Code...">
+                <button  type="submit" class="btn  btn-md" name="login">Apply</button>
+            </form>
+         </div>
+        </div> 
+
+        <div class="row">
+            <div class="col-md-8 m-5">
+                <div class="row mt-30">
+                    <h4 class="mb-30">Shipping Details</h4>
+                    <form method="post" action="{% url 'payment'%}" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <input type="text"  required="" name="first_name" placeholder="First name *">
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <input type="text"  required="" name="last_name" placeholder="Last name *">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <input type="text"  name="street" required="" placeholder="Street Address *">
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <input required="" type="text"  name="phone" placeholder="Phone *">
+                            </div>
+                    
+                        </div>
+                        
+                        <div class="row shipping_calculator">
+                            <div class="form-group col-lg-6">
+                                <div class="custom_select">
+                                    <select id="country" name="country" style="border-color: white;" class="form-control select-active country">
+                                        
+                                        {% for country in countries%}
+                                        <option data-code="{{country.code}}" value="{{country.code}}">{{country.name}} </option>
+                                        {% endfor%}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <input required="" type="text"  name="city" placeholder="City / Town *">
+                            </div>
+                        </div>
+
+                        <div class="row shipping_calculator">
+
+                            <div class="form-group col-lg-6">
+                                <input required="" type="text"  name="ZIP" placeholder="Postcode / ZIP *">
+                            </div>
+
+
+                            <div class="form-group col-lg-6" id="stateDiv">
+                                    <input required="" type="text"  name="state" placeholder="State *">
+
+                                    <!-- <select id="state" name="state" class="form-control select-active">
+                                    </select> -->
+                                </div>
+                        </div>
+                        
+                        <div class="row">
+                            {% comment %} <div class="form-group col-lg-6">
+                                <input required="" type="text"  name="market_name" placeholder="SuperMarket Name">
+                            </div> {% endcomment %}
+                            <div class="form-group col-lg-6">
+                                <input required="" type="text"  name="email_address" placeholder="Email address *">
+                            </div>
+                        </div>
+                        {% comment %} <div class="form-group mb-30">
+                            <textarea rows="5" placeholder="Additional information"></textarea>
+                        </div> {% endcomment %}
+                        <button type="submit"class="btn btn-success mb-20 w-100 h-3">Proceed To CheckOut<i class="fi-rs-sign-out ml-15"></i></button>
+                    
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% else %}
+        <h3>Your cart is empty</h3>
+        <img src="{% static 'management/images/theme/empty-cart.webp' %}" alt="Cart is empty">
+        {% endif %}
+
+        </section>
+        <footer class="footer py-3 px-3">
+            {% for name in site %}
+            <p class="mb-0"><a href="{{name.site_url}}">activelyblack.com</a></p>
+            {% endfor %}        
+        </footer>
+        <button class="color-picker-btn btn btn-primary">
+            <i class="fa fa-paint-brush" aria-hidden="true"></i>
+        </button>
+        <div class="overlay"></div>
+        <aside class="color-picker">
+            <h6 class="mb-4">Select a Demo</h6>
+            <div class="select-demo p-3 mb-4">
+                <p class="mb-0">Hello! Select your style below. Choose the ones that best fits your needs.</p>
+            </div>
+            <div class="row">
+                <div class="col-6 text-center">
+                    <button class="box rounded dark-picker w-100">
+                        <span class="color-box bg-dark"></span>
+                    </button>
+                    <span class="d-block mt-1">Dark</span>
+                </div>
+                <div class="col-6 text-center">
+                    <button class="box rounded light-picker w-100">
+                        <span class="color-box bg-light"></span>
+                    </button>
+                    <span class="d-block mt-1">Light</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- <script src="{% static 'assets/js/vendor/modernizr-3.6.0.min.js'%}"></script>
+    <script src="{% static 'management/js/vendor/jquery-3.6.0.min.js'%}"></script>
+    <script src="{% static 'management/js/vendor/jquery-migrate-3.3.0.min.js'%}"></script>
+    <script src="{% static 'management/js/vendor/bootstrap.bundle.min.js'%}"></script>
+    <script src="{% static 'management/js/plugins/slick.js'%}"></script>
+    <script src="{% static 'management/js/plugins/jquery.syotimer.min.js'%}"></script>
+    <script src="{% static 'management/js/plugins/wow.js'%}"></script>
+    <script src="{% static 'management/js/plugins/jquery-ui.js'%}"></script>
+    <script src="{% static 'management/js/plugins/perfect-scrollbar.js'%}"></script>
+    <script src="{% static 'management/js/plugins/magnific-popup.js'%}"></script>
+    <script src="{% static 'management/js/plugins/select2.min.js'%}"></script>
+    <script src="{% static 'management/js/plugins/waypoints.js'%}"></script>
+    <script src="{% static 'management/js/plugins/counterup.js'%}"></script>
+    <script src="{% static 'management/js/plugins/jquery.countdown.min.js'%}"></script>
+    <script src="{% static 'management/js/plugins/images-loaded.js'%}"></script>
+    <script src="{% static 'management/js/plugins/isotope.js'%}"></script>
+    <script src="{% static 'management/js/plugins/scrollup.js'%}"></script>
+    <script src="{% static 'management/js/plugins/jquery.vticker-min.js'%}"></script>
+    <script src="{% static 'management/js/plugins/jquery.theia.sticky.js'%}"></script>
+    <script src="{% static 'management/js/plugins/jquery.elevatezoom.js'%}"></script> -->
+
+<script src="{% static 'management/js/main.js' %}"></script>
+<script src="{% static 'management/js/shop.js' %}"></script>
+<script>
+        
+    const country = document.getElementById("country");
+    const state = document.getElementById("state");   
+    const stateDiv = document.getElementById("stateDiv");   
+    const handleGetStates = ()=>{
+
+      $.ajax({
+     type:"GET",
+     
+     url : `${country.value}/`,
+     success : function(response){
+        const data = response.data 
+        
+        if(data){
+          console.log("true")
+          state.innerHTML =""
+
+          data.map(country_states =>{
+        
+       
+          state.innerHTML += `<option  value="${country_states}">${country_states}</option>`
+        
+        
+      }); 
+        }
+        else{
+          console.log("data false")
+          stateDiv.innerHTML=`<input required="" type="text" name="state" placeholder="state *">`
+        }
+        
+       
+     },
+     error : function(error){
+        
+     }
+   })
+
+ }
+   handleGetStates(country.value);
+
+    $('.country').on('change', function () {
+      
+      const countryId = $(this).val();
+   
+      handleGetStates();
+   })
+  
+</script>
+{% endblock %}
